@@ -1,0 +1,2 @@
+get pods; minikube kubectl -- get pods -A | awk '{print $2}' ~/vim_pods.dict
+test uname; uname -a
