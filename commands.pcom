@@ -1,12 +1,31 @@
-*LINUX
+LiNUX
+    *WSL
+        wsl --list --running
+        ip route show | grep -i default | awk '{ print $3 }' # windows host ip
+    *DNS
+        tabe ~/dns_vim.dict
+        systemctl status
+        resolvectl status
+        sudo resolvectl domain '~.' # all domain resolution made through eth0
+        /etc/resolv.conf # systemd-resolved managed
+        /etc/systemd/resolved.conf
+        sudo systemctl restart systemd-resolved
+        resolvectl status
+        dig +short @?dns ?url
+        dig +short 10.232.118.7 plugins.gradle.org
+        nslookup ?url
+        nslookup plugins.gradle.org
     *USERS
         id ~username # check user existence
         sudo useradd -m -G ?group ?name # 
         sudo groupadd ?grop # group 
     *UNCAT
-        find ~/.gradle/daemon /var/log -type f -mmin -1 > ~/vim_find.dict
-        egrep -i "error" /home/u6831600i/.gradle/daemon/8.8/daemon-1175.out.log --color=auto
-        curl --proxy :proxy :url
+        tabe ~/vim_find.dict
+        find ~/.gradle/daemon /var/log -type f -mmin -5 > ~/vim_find.dict
+        egrep -i "error" /var/log/syslog  --color=auto
+        curl --proxy ?proxy ?url
+        sudo chattr +i ?file #make it immutable
+        sudo chattr -i ?file #reset immutability
     *SSH
         ssh -T git@github.com
         ls ~/.ssh NAME
@@ -67,45 +86,16 @@
             *BUILD
                 cd /home/u6831600/projects/tx/tx_mvd/mxd-runtimes; ./gradlew build -x checkstyleMain -x checkstyleTest
                 cd /home/u6831600/projects/tx/tx_mvd/mxd-runtimes; ./gradlew dockerize
-            *DOCKER
-                docker exec -it my_container bash
+
+                
+                docker exec -it ?imagename bash
+                docker exec -it postgres_multi_db bash
                 docker logs my_container
                 docker stop $(docker ps -q)
-
-                docker pull registry.k8s.io/ingress-nginx/controller:1.12.1
-                docker pull registry.k8s.io/ingress-nginx/kube-webhook-certgen:1.5.2
-                docker pull docker.io/minio/minio:latest
-                docker pull docker.io/minio/mc:latest
-                docker pull mcr.microsoft.com/azure-storage/azurite:latest
-                docker pull docker.io/tractusx/bdrs-server:0.5.2
-                docker pull docker.io/hashicorp/vault:1.15.2
-                docker pull docker.io/library/nginx:1.27.4
-                docker pull docker.io/hashicorp/vault:1.19.0
-                docker pull docker.io/library/postgres:15.3-alpine3.18
-                docker pull tractusx/edc-controlplane-postgresql-hashicorp-vault:0.9.0 
-                docker pull tractusx/edc-dataplane-hashicorp-vault:0.9.0
-                docker pull mcr.microsoft.com/azure-cli:latest
-                docker pull docker.io/postman/newman:ubuntu
                 docker images
 
-                kind delete cluster --name mxd
             *START
-                bash /home/u6831600/projects/tx/tx_mvd_plus/kind_load.sh
-                kind create cluster -n mxd --config /home/u6831600/projects/tx/tx_mvd/mxd/kind.config.yaml
-                kind load docker-image registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.5.2 --name mxd
-                kind load docker-image registry.k8s.io/ingress-nginx/controller:v1.12.1 --name mxd
-                kind load docker-image docker.io/library/postgres:15.3-alpine3.18 --name mxd
-                kind load docker-image docker.io/minio/minio:latest --name mxd
-                kind load docker-image docker.io/minio/mc:latest --name mxd
-                kind load docker-image mcr.microsoft.com/azure-storage/azurite:latest --name mxd
-                kind load docker-image docker.io/tractusx/bdrs-server:0.5.2 --name mxd
-                kind load docker-image docker.io/library/nginx:latest --name mxd
-                #kind load docker-image docker.io/hashicorp/vault:1.19.0 --name mxd
-                kind load docker-image mcr.microsoft.com/azure-cli:latest --name mxd
-                kind load docker-image tractusx/edc-controlplane-postgresql-hashicorp-vault:0.9.0 --name mxd
-                kind load docker-image tractusx/edc-dataplane-hashicorp-vault:0.9.0 --name mxd
-                kind load docker-image docker.io/postman/newman:ubuntu --name mxd
-                kind load docker-image data-service-api tx-identityhub tx-catalog-server tx-issuerservice --name mxd
+                kind delete cluster --name mxd
     
                 # kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
                 # curl -o /home/u6831600/projects/tx/tx_mvd/mxd/deploy.yaml 
@@ -120,7 +110,8 @@
             *GRADLE
                 *BUILT_IN_VARIABLES
                     layout.buildDirectory
-                *UNCAT    
+                *UNCAT
+                    ~/.gradle/gradle.properties
                     ./gradlew generateGitProperties
                     rm -rf /home/u6831600/.gradle/*
                     ./gradlew clean build --refresh-dependencies
@@ -156,11 +147,33 @@
         *HELM
             helm dependency update
         *DOCKER
-            docker ps --format '{{.Names}}' > ~/cont_vim.dict; cat ~/cont_vim.dict
+            docker run -it --rm postgres psql -h <host> -U <user> -d <database>
+            docker exec -it ?imagename sh
+            docker exec -it catena-x-controlplane sh
+            docker exec -it --user root catena-x-controlplane /bin/sh
+            docker run --rm -it --net container: catena-x-backend  nicolaka/netshoot
+            docker logs ?imagename
+            docker logs catena-x-controlplane
+            docker stop $(docker ps -qa)
+            docker images
+            docker compose ps --all  --format '{{.Names}}' > ~/vim_cont.dict
             sudo systemctl ?command # command: edit|stop|start|status
             docker -ai ?do imagename ?name # do:stop|rm|logs|inspect
             docker images
             docker compose build --build_arg GRADLE_FLAGS="--debug"
+            docker compose -f /home/u6831600/projects/sg/my/edc-chat-application/docker-compose.yaml -p edc-chat-application start ?container
+            docker compose -f /home/u6831600/projects/sg/my/edc-chat-application/docker-compose.yaml -p edc-chat-application start vault-prepopulate 
+            *IN_DOCKER
+            nc -vz he202194.emea2.cds.t-internal.com 3128 #url/proxy check
+            wget https://wallet.learn.smartsenselabs.com/oauth/token
+
+            *JAVA_DEBUG
+                *DOCKER
+                    EXPOSE  5000
+                    ENV JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5000"
+                *DOCKER_COMPOSE
+                    ports:
+                        "5005:5000"
         *CLUSTER
             kubectl cluster-info
         *NODES
@@ -197,3 +210,5 @@
             git push origin <tag>
             git -d tag <tag>
             git push origin --delete <tag>
+    *BACKUP
+        ~/tar_files_from.txt
