@@ -9,7 +9,7 @@ set expandtab
 set smarttab
 set autoindent
 
-set dictionary+=~/vim_pods.dict,~/vim_proxies.dict,~/vim_find.dict,~/vim_cont.dict
+set dictionary+=vim_pods.dict,vim_proxies.dict,vim_find.dict,vim_cont.dict
 set foldenable
 set foldmethod=indent
 set filetype=on
@@ -23,6 +23,10 @@ set showmatch
 set t_vb=
 set ignorecase 
 set smartcase
+syntax on
+source syntax.vim
+set noswapfile
+
 "  PCOM project command file
 au BufRead,BufNewFile *.pcom set filetype=pcom
 highlight Words ctermfg=LightBlue
@@ -42,7 +46,7 @@ function! Test()
     execute "terminal ".c[0]
 endfunction
 
-noremap rr <Esc>:source ~/.vimrc<CR>
+noremap rr <Esc>:source .vimrc<CR>
 
 noremap jj <Esc>Vy:terminal<C-r>"
 noremap kk <Esc>Vy:!<C-r>";read -p "wait"

@@ -1,4 +1,10 @@
-LiNUX
+*LINUX
+    *TAR  
+        #c:compress, x:extract, r:append, t:list, C:extract in specific dir
+        #--keep-newer-files, --keep-old-files, --skip-old-files, --verify
+        #--exclude-backups --exclude-ignore/-recursive=FILE, --exclude-tag/-all/-under=FILE
+        #--exclude-vcs/-ignores --newer=DATE --index-file, --show-omitted-dirs, --files-from=FILE
+            
     *WSL
         wsl --list --running
         ip route show | grep -i default | awk '{ print $3 }' # windows host ip
@@ -147,6 +153,7 @@ LiNUX
         *HELM
             helm dependency update
         *DOCKER
+            /etc/systemd/system/docker.service.d/http-proxy.conf
             docker run -it --rm postgres psql -h <host> -U <user> -d <database>
             docker exec -it ?imagename sh
             docker exec -it catena-x-controlplane sh
