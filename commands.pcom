@@ -4,7 +4,8 @@
         #--keep-newer-files, --keep-old-files, --skip-old-files, --verify
         #--exclude-backups --exclude-ignore/-recursive=FILE, --exclude-tag/-all/-under=FILE
         #--exclude-vcs/-ignores --newer=DATE --index-file, --show-omitted-dirs, --files-from=FILE
-            
+    *FIND
+        find . -type f ! -perm a+w # finding what others cant write
     *WSL
         wsl --list --running
         ip route show | grep -i default | awk '{ print $3 }' # windows host ip
@@ -153,6 +154,9 @@
         *HELM
             helm dependency update
         *DOCKER
+            docker network create --subnet=192.168.100.0/24 --ip-range=192.168.100.128/25 ?networkname
+            docker network ls
+            docker network inspect edc_network | egrep -i "subnet|iprange" 
             /etc/systemd/system/docker.service.d/http-proxy.conf
             docker run -it --rm postgres psql -h <host> -U <user> -d <database>
             docker exec -it ?imagename sh
@@ -160,7 +164,6 @@
             docker exec -it --user root catena-x-controlplane /bin/sh
             docker run --rm -it --net container: catena-x-backend  nicolaka/netshoot
             docker logs ?imagename
-            docker logs catena-x-controlplane
             docker stop $(docker ps -qa)
             docker images
             docker compose ps --all  --format '{{.Names}}' > ~/vim_cont.dict
@@ -169,7 +172,8 @@
             docker images
             docker compose build --build_arg GRADLE_FLAGS="--debug"
             docker compose -f /home/u6831600/projects/sg/my/edc-chat-application/docker-compose.yaml -p edc-chat-application start ?container
-            docker compose -f /home/u6831600/projects/sg/my/edc-chat-application/docker-compose.yaml -p edc-chat-application start vault-prepopulate 
+            docker compose config
+            docker ps -q | xargs -n 1 docker inspect --format '{{.Name}} => {{.Config.Hostname}}' # docker hostnames
             *IN_DOCKER
             nc -vz he202194.emea2.cds.t-internal.com 3128 #url/proxy check
             wget https://wallet.learn.smartsenselabs.com/oauth/token
